@@ -33,7 +33,7 @@ function operations:fill(val)
     end
 end
 
-function operations:copy_from(src_tensor)
+function operations:copyFromTensor(src_tensor)
     if self.rows ~= src_tensor.rows or self.cols ~= src_tensor.cols then
         error("Tensor dimensions must match to perform a raw memory copy")
     end

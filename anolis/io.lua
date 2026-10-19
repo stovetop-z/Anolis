@@ -4,11 +4,7 @@ local Tensor = require("anolis.tensor").tensor2D
 
 local io = {}
 
-function io.fromCSV(filepath, has_headers)
-    local parsed = ftcsv.parse(filepath, {headers = false})
-    local start_row = has_headers and 2 or 1
-    local n_rows = #parsed - (has_headers and 1 or 0)
-    local n_cols = #(parsed[1])
+function io.fromTable(src_table, start_row, n_rows, n_cols)
 
     local out = Tensor(n_rows, n_cols)
     local td = out.data
@@ -18,8 +14,8 @@ function io.fromCSV(filepath, has_headers)
 
     local flat_index = 0
     
-    for r = start_row, #parsed do
-        local row = parsed[r]
+    for r = start_row, #src_table do
+        local row = src_table[r]
 
         for c = 1, n_cols do
             local rc = row[c]
@@ -41,6 +37,16 @@ function io.fromCSV(filepath, has_headers)
         end
     end
 
+    return out
+end
+
+function io.fromCSV(filepath, has_headers)
+    local parsed = ftcsv.parse(filepath, {headers = false})
+    local start_row = has_headers and 2 or 1
+    local n_rows = #parsed - (has_headers and 1 or 0)
+    local n_cols = #(parsed[1])
+
+    local out = io.fromTable(parsed, start_row, n_rows, n_cols)
     return out
 end
 
